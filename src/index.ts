@@ -156,7 +156,8 @@ async function main(): Promise<void> {
 
   if (args.userDataDir) {
     const { resolve } = await import("path");
-    setConfig({ userDataDir: resolve(args.userDataDir) });
+    const expanded = args.userDataDir.replace(/^~/, process.env.HOME || "~");
+    setConfig({ userDataDir: resolve(expanded) });
   }
   setConfig({ headless: args.headless, timeout: args.timeout });
 

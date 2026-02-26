@@ -39,6 +39,7 @@
     "type": "git",
     "url": "git+https://github.com/james-see/shrinkedin-mcp.git"
   },
+  "author": "jamesacampbell",
   "bugs": {
     "url": "https://github.com/james-see/shrinkedin-mcp/issues"
   },

@@ -1,0 +1,48 @@
+{
+  "name": "shrinkedin-mcp",
+  "version": "0.1.0",
+  "description": "LinkedIn MCP server with robust session storage - profile, company, job scraping",
+  "type": "module",
+  "bin": {
+    "shrinkedin-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "patchright": "^1.57.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "keywords": [
+    "linkedin",
+    "mcp",
+    "model-context-protocol",
+    "scraper",
+    "ai"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/shrinkedin-mcp.git"
+  },
+  "main": "index.js",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/shrinkedin-mcp/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/shrinkedin-mcp#readme"
+}

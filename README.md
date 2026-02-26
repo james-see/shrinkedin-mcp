@@ -12,7 +12,7 @@ LinkedIn MCP server with robust session storage. Scrape profiles, companies, and
 ## Prerequisites
 
 - Node.js 20+
-- Patchright Chromium: `npx patchright install chromium`
+- Patchright Chrome: `npx patchright install chrome` (recommended; Chromium can have SSL issues on macOS)
 
 ## Installation
 
@@ -75,6 +75,14 @@ Or with local install:
 - **search_people** – `keywords`, optional `location`
 - **get_job_details** – `job_id`
 - **close_session** – Close browser and cleanup
+
+## Troubleshooting
+
+**Chrome crashes (EXC_BREAKPOINT, CompositorTileWorker):** Try Chromium instead:
+```bash
+npx patchright install chromium
+SHRINKEDIN_USE_CHROMIUM=1 npx shrinkedin-mcp --login
+```
 
 ## License
 

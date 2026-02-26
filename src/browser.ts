@@ -30,11 +30,21 @@ export async function getOrCreateBrowser(headless?: boolean): Promise<{ context:
   }
 
   const headlessMode = headless ?? cfg.headless;
-  const context = await chromium.launchPersistentContext(resolvedDir, {
+  const useChromium = process.env.SHRINKEDIN_USE_CHROMIUM === "1";
+  const launchOptions: Parameters<typeof chromium.launchPersistentContext>[1] = {
     headless: headlessMode,
     viewport: { width: 1280, height: 720 },
     timeout: cfg.timeout,
-  });
+    ...(useChromium ? {} : { channel: "chrome", args: ["--disable-gpu"] }),
+  };
+  let context: BrowserContext;
+  try {
+    context = await chromium.launchPersistentContext(resolvedDir, launchOptions);
+  } catch {
+    delete (launchOptions as Record<string, unknown>).channel;
+    delete (launchOptions as Record<string, unknown>).args;
+    context = await chromium.launchPersistentContext(resolvedDir, launchOptions);
+  }
 
   const page = context.pages()[0] ?? (await context.newPage());
   page.setDefaultTimeout(cfg.timeout);
@@ -60,11 +70,7 @@ export async function getOrCreateBrowser(headless?: boolean): Promise<{ context:
       if (existsSync(cookiesPath)) rmSync(cookiesPath);
       if (existsSync(cookiesJournal)) rmSync(cookiesJournal);
 
-      const ctx2 = await chromium.launchPersistentContext(tempProfile, {
-        headless: headlessMode,
-        viewport: { width: 1280, height: 720 },
-        timeout: cfg.timeout,
-      });
+      const ctx2 = await chromium.launchPersistentContext(tempProfile, launchOptions);
       const page2 = ctx2.pages()[0] ?? (await ctx2.newPage());
       page2.setDefaultTimeout(cfg.timeout);
 

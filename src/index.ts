@@ -17,6 +17,7 @@ function parseArgs(): {
   login: boolean;
   logout: boolean;
   status: boolean;
+  testProfile: string | null;
   headless: boolean;
   timeout: number;
   userDataDir: string | null;
@@ -26,6 +27,7 @@ function parseArgs(): {
   let login = false;
   let logout = false;
   let status = false;
+  let testProfile: string | null = null;
   let headless = true;
   let timeout = 5000;
   let userDataDir: string | null = null;
@@ -42,6 +44,9 @@ function parseArgs(): {
       case "--status":
         status = true;
         break;
+      case "--test-profile":
+        testProfile = args[++i] ?? null;
+        break;
       case "--no-headless":
         headless = false;
         break;
@@ -56,7 +61,7 @@ function parseArgs(): {
         break;
     }
   }
-  return { login, logout, status, headless, timeout, userDataDir, transport };
+  return { login, logout, status, testProfile, headless, timeout, userDataDir, transport };
 }
 
 async function runLogin(): Promise<void> {
@@ -146,6 +151,25 @@ async function runStatus(): Promise<void> {
   process.exit(1);
 }
 
+async function runTestProfile(username: string): Promise<void> {
+  if (!profileExists()) {
+    console.error("No LinkedIn profile found. Run with --login to create a profile.");
+    process.exit(1);
+  }
+  try {
+    await ensureAuthenticated();
+    const { page } = await getOrCreateBrowser();
+    const result = await scrapePerson(page, username, new Set());
+    console.log(JSON.stringify(result, null, 2));
+    await closeBrowser();
+    process.exit(0);
+  } catch (e) {
+    console.error(e);
+    await closeBrowser();
+    process.exit(1);
+  }
+}
+
 function toolResult(content: string | object): { content: Array<{ type: "text"; text: string }> } {
   const text = typeof content === "string" ? content : JSON.stringify(content, null, 2);
   return { content: [{ type: "text", text }] };
@@ -171,6 +195,10 @@ async function main(): Promise<void> {
   }
   if (args.status) {
     await runStatus();
+    return;
+  }
+  if (args.testProfile) {
+    await runTestProfile(args.testProfile);
     return;
   }
 

@@ -50,6 +50,7 @@ export async function searchPeople(
 ): Promise<{
   url: string;
   sections: Record<string, string>;
+  profile_urls: string[];
   pages_visited: string[];
   sections_requested: string[];
 }> {
@@ -59,9 +60,29 @@ export async function searchPeople(
   const text = await extractPage(page, url);
   const sections: Record<string, string> = {};
   if (text) sections["search_results"] = text;
+
+  const profileUrls = await page.evaluate(() => {
+    const seen = new Set<string>();
+    const links = document.querySelectorAll('a[href*="/in/"]');
+    const urls: string[] = [];
+    for (const a of links) {
+      const href = (a as HTMLAnchorElement).href;
+      const m = href.match(/linkedin\.com\/in\/([^/?]+)/);
+      if (m) {
+        const u = m[1].toLowerCase();
+        if (!seen.has(u) && !["pub", "company", "jobs"].includes(u)) {
+          seen.add(u);
+          urls.push(`https://www.linkedin.com/in/${m[1]}`);
+        }
+      }
+    }
+    return urls;
+  });
+
   return {
     url,
     sections,
+    profile_urls: profileUrls,
     pages_visited: [url],
     sections_requested: ["search_results"],
   };

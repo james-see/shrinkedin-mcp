@@ -5,6 +5,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { getOrCreateBrowser, closeBrowser } from "./browser.js";
 import { ensureAuthenticated } from "./auth.js";
+import { homedir } from "os";
 import { setConfig, getProfileDir } from "./config.js";
 import { profileExists, clearProfile } from "./session.js";
 import { warmUpBrowser } from "./auth.js";
@@ -66,7 +67,7 @@ function parseArgs(): {
 
 async function runLogin(): Promise<void> {
   const { resolve } = await import("path");
-  const dir = getProfileDir().replace(/^~/, process.env.HOME || "~");
+  const dir = getProfileDir();
   const expandedDir = resolve(dir);
   setConfig({ userDataDir: expandedDir, headless: false });
 
@@ -180,7 +181,7 @@ async function main(): Promise<void> {
 
   if (args.userDataDir) {
     const { resolve } = await import("path");
-    const expanded = args.userDataDir.replace(/^~/, process.env.HOME || "~");
+    const expanded = args.userDataDir.replace(/^~/, process.env.HOME || homedir());
     setConfig({ userDataDir: resolve(expanded) });
   }
   setConfig({ headless: args.headless, timeout: args.timeout });

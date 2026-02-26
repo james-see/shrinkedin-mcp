@@ -20,7 +20,7 @@ let browserContext: BrowserContext | null = null;
 
 export async function getOrCreateBrowser(headless?: boolean): Promise<{ context: BrowserContext; page: Page }> {
   const cfg = getConfig();
-  const resolvedDir = getProfileDir().replace(/^~/, process.env.HOME || "~");
+  const resolvedDir = getProfileDir();
   ensureProfileDir();
 
   if (browserContext) {

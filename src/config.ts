@@ -1,3 +1,4 @@
+import { homedir } from "os";
 import { resolve } from "path";
 
 export interface Config {
@@ -6,8 +7,18 @@ export interface Config {
   timeout: number;
 }
 
+function getHome(): string {
+  return process.env.HOME || homedir();
+}
+
+function getDefaultProfileDir(): string {
+  return resolve(getHome(), ".linkedin-mcp", "profile");
+}
+
 let config: Config = {
-  userDataDir: resolve(process.env.HOME || "~", ".linkedin-mcp", "profile"),
+  userDataDir: process.env.USER_DATA_DIR
+    ? resolve(process.env.USER_DATA_DIR.replace(/^~/, getHome()))
+    : getDefaultProfileDir(),
   headless: true,
   timeout: 5000,
 };
@@ -21,7 +32,7 @@ export function setConfig(updates: Partial<Config>): void {
 }
 
 export function getProfileDir(): string {
-  return config.userDataDir.replace(/^~/, process.env.HOME || "~");
+  return config.userDataDir.replace(/^~/, getHome());
 }
 
 export function getCookiePath(): string {

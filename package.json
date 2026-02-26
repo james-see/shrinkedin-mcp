@@ -1,6 +1,6 @@
 {
   "name": "shrinkedin-mcp",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "LinkedIn MCP server with robust session storage - profile, company, job scraping",
   "type": "module",
   "bin": {

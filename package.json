@@ -37,12 +37,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_USERNAME/shrinkedin-mcp.git"
+    "url": "git+https://github.com/james-see/shrinkedin-mcp.git"
   },
-  "main": "index.js",
-  "author": "",
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/shrinkedin-mcp/issues"
+    "url": "https://github.com/james-see/shrinkedin-mcp/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/shrinkedin-mcp#readme"
+  "homepage": "https://github.com/james-see/shrinkedin-mcp#readme"
 }
